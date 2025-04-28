@@ -97,7 +97,7 @@ Fractal is a web application that allows users to manage Minecraft server subdom
    - Purchase additional subdomain slots for 1000 coins.
 
 4. **Admin Panel** (Admins Only):
-   - Access via `/admin` to manage users, update coins, suspend/unsuspend accounts, and delete subdomains.
+   - was never implement 
 
 5. **Subdomain Management**:
    - Create a subdomain with an IPv4 address and port for Minecraft servers.
