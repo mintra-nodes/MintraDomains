@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "@discordjs/voice": "^0.17.0",
+    "alpinejs": "^3.14.9",
+    "aos": "^2.3.4",
+    "axios": "^1.7.7",
+    "connect-sqlite3": "^0.9.15",
+    "cookie-parser": "^1.4.7",
+    "csurf": "^1.10.0",
+    "discord-oauth2": "^2.12.1",
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.1.0",
+    "libsodium-wrappers": "^0.7.15",
+    "node-fetch": "^2.7.0",
+    "passport": "^0.7.0",
+    "passport-discord": "^0.1.4",
+    "sqlite3": "^5.1.7"
+  }
+}
