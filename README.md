@@ -72,6 +72,7 @@ Fractal is a web application that allows users to manage Minecraft server subdom
    - **DOMAINS**: List of domains managed by the app.
    - **ZONE_IDS**: Corresponding Cloudflare Zone IDs for each domain.
    - **ADMIN_USER_IDS**: Discord user IDs of admin users.
+   - ADMIN_API_KEY=cda35a4dc3f97a53cb1ecba5d17b790a65b315ec // api key for adding coins and subdomain limit to users
 
 4. **Set Up SQLite Database**:
    The application automatically creates a `Frac.db` SQLite database on startup, with tables for `users` and `subdomains`.
