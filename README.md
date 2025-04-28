@@ -1,4 +1,4 @@
-# Fractal
+![Fractal](https://cdn.discordapp.com/attachments/1312378652121501809/1366415346789253161/Screenshot_20250428_195116_Chrome.jpg?ex=6810dcf5&is=680f8b75&hm=1b1db0c122e89a27201c87e16dada889cd00c664f7894977635554a60bc472c0&)
 
 Fractal is a web application that allows users to manage Minecraft server subdomains using Cloudflare's DNS services. Users can authenticate via Discord, create, edit, and delete subdomains, participate in a referral program to earn coins, and purchase additional subdomain slots from a shop. The application includes an admin panel for managing users and their subdomains.
 
