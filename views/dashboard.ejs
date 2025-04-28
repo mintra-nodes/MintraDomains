@@ -1,1 +1,1103 @@
+<!DOCTYPE html>
 
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fractal Dashboard</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+        :root { --brand: #ff3360; }
+        
+        /*h3l2f*/
+        
+        html.dark .input-field { color: white; }
+		.input-field {
+            border-color: #e2e8f0;
+            background-color: #bdbdbd20;
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+		/*h3l2f*/
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+
+        .glass-card { background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(255, 255, 255, 0.2); }
+
+        .brand-gradient { background: linear-gradient(135deg, var(--brand), #ff6b8b); }
+
+        .stats-card { transition: all 0.3s ease; }
+
+        .stats-card:hover { transform: translateY(-5px); }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); z-index: 1000; }
+
+        .input-field { @apply w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 bg-white; border-color: #e2e8f0; }
+
+        .input-field:focus { @apply outline-none border-[#ff3360] ring-2 ring-[#ff3360]/10; }
+
+        .btn-primary { @apply px-6 py-3 bg-[#ff3360] text-white font-semibold rounded-xl transition-all duration-200; }
+
+        .btn-primary:hover { @apply bg-[#ff1f4f] transform -translate-y-0.5 shadow-lg shadow-[#ff3360]/20; }
+
+        .btn-secondary { @apply px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl transition-all duration-200; }
+
+        .btn-secondary:hover { @apply bg-gray-200; }
+
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        .animate-pulse-soft { animation: pulse 2s infinite; }
+
+        html.dark { background: #1f2937; }
+
+        html.dark body { background-color: #1f2937; background-image: linear-gradient(135deg, #1f2937, #374151); }
+
+        html.dark .glass-card { background: rgba(31, 41, 55, 0.95); border-color: rgba(255, 255, 255, 0.1); }
+
+        html.dark .text-gray-800, 
+        html.dark .text-gray-700,
+        html.dark .text-gray-600,
+        html.dark .text-gray-500 { color: #ffffff; }
+
+        html.dark .bg-gray-50 { background-color: #374151; }
+
+        html.dark .bg-gray-100 { background-color: #4b5563; }
+
+        html.dark .bg-white { background-color: #1f2937; }
+
+        html.dark .border-gray-100 { border-color: #4b5563; }
+
+        html.dark .hover\:bg-gray-50:hover { background-color: #4b5563; }
+
+        html.dark .hover\:bg-gray-200:hover { background-color: #6b7280; }
+
+        html.dark .text-yellow-500 { color: #f59e0b; }
+
+        html.dark .bg-yellow-500 { background-color: #d97706; }
+
+        html.dark .bg-green-500 { background-color: #059669; }
+
+        html.dark .bg-blue-500 { background-color: #2563eb; }
+
+        html.dark .text-red-600 { color: #f87171; }
+
+        html.dark .hover\:bg-red-50:hover { background-color: #7f1d1d; }
+
+        html.dark .bg-yellow-100 { background-color: #854d0e; }
+
+        html.dark .text-yellow-800 { color: #fef08a; }
+
+        html.dark .dark\:text-white { color: #ffffff; }
+
+        #toast.show { transform: translateY(0); opacity: 1; }
+
+        #toast.success { background-color: rgba(22, 163, 74, 0.95); }
+
+        #toast.error { background-color: rgba(220, 38, 38, 0.95); }
+
+    </style>
+
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+
+    <nav class="glass-card fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center">
+
+        <div class="flex items-center space-x-4">
+
+            <img src="/images/Frac.png" alt="Logo" class="w-8 h-8">
+
+            <h1 class="text-xl font-bold text-gray-800">Fractal</h1>
+
+        </div>
+
+        <div class="flex items-center space-x-6">
+
+            <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-200 transition-colors" aria-label="Toggle dark mode">
+
+                <svg id="sunIcon" class="w-5 h-5 text-gray-700 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+
+                </svg>
+
+                <svg id="moonIcon" class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+
+                </svg>
+
+            </button>
+
+            <div class="relative group">
+
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="toggleProfileCard()">
+
+                    <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="Profile" class="w-8 h-8 rounded-lg ring-2 ring-[#ff3360]/20">
+
+                    <span class="font-medium text-gray-700"><%= user.username %></span>
+
+                </div>
+
+                <div id="profileCard" class="hidden absolute right-0 mt-2 w-64 rounded-xl shadow-lg bg-white z-50">
+
+                    <div class="p-4">
+
+                        <div class="flex items-center space-x-3 mb-4">
+
+                            <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="Profile" class="w-12 h-12 rounded-lg">
+
+                            <div>
+
+                                <h3 class="font-semibold text-gray-800"><%= user.username %></h3>
+
+                                <p class="text-sm text-gray-500">Balance: <%= user.coins || 0 %> coins</p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="border-t border-gray-100 pt-3">
+
+                            <a href="/shop" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50 rounded-lg">Shop</a>
+
+                            <% if (user.isAdmin) { %>
+
+                            <a href="/admin" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50 rounded-lg">Admin</a>
+
+                            <% } %>
+
+                            <a href="/auth/logout" class="block py-2 px-4 text-sm text-red-600 hover:bg-red-50 rounded-lg">Logout</a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <main class="container mx-auto px-4 pt-24 pb-12 max-w-7xl">
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+
+            <div class="stats-card glass-card p-6 rounded-2xl col-span-1">
+
+                <div class="flex items-center justify-between">
+
+                    <h3 class="text-gray-500 font-medium">Your Coins</h3>
+
+                    <div class="w-10 h-10 bg-yellow-500 rounded-xl flex items-center justify-center">
+
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+
+                            <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433-.582a2.305 2.305 0 01-.567.267z"/>
+
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/>
+
+                        </svg>
+
+                    </div>
+
+                </div>
+
+                <p class="text-3xl font-bold text-gray-800 mt-4"><%= user.coins %></p>
+
+            </div>
+
+            <div class="stats-card glass-card p-6 rounded-2xl">
+
+                <div class="flex items-center justify-between">
+
+                    <h3 class="text-gray-500 font-medium">Total Subdomains</h3>
+
+                    <div class="w-10 h-10 brand-gradient rounded-xl flex items-center justify-center">
+
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+
+                        </svg>
+
+                    </div>
+
+                </div>
+
+                <p class="text-3xl font-bold text-gray-800 mt-4"><%= subdomains.length %></p>
+
+            </div>
+
+            <div class="stats-card glass-card p-6 rounded-2xl">
+
+                <div class="flex items-center justify-between">
+
+                    <h3 class="text-gray-500 font-medium">Active Domains</h3>
+
+                    <div class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center">
+
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+
+                        </svg>
+
+                    </div>
+
+                </div>
+
+                <p class="text-3xl font-bold text-gray-800 mt-4"><%= subdomains.length %></p>
+
+            </div>
+
+            <div class="stats-card glass-card p-6 rounded-2xl">
+
+                <div class="flex items-center justify-between">
+
+                    <h3 class="text-gray-500 font-medium">Available Slots</h3>
+
+                    <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
+
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-0h6m-6 0H6"/>
+
+                        </svg>
+
+                    </div>
+
+                </div>
+
+                <p class="text-3xl font-bold text-gray-800 mt-4"><%= user.max_subdomains - subdomains.length %></p>
+
+            </div>
+
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 mb-8">
+
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+
+                <div>
+
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Your Subdomains</h2>
+
+                    <p class="text-gray-500">Manage all your domain configurations in one place</p>
+
+                </div>
+
+                <button id="createBtn" class="btn-primary flex items-center space-x-2 mt-4 md:mt-0 dark:text-white">
+
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+
+                    </svg>
+
+                    <span>Create New</span>
+
+                </button>
+
+            </div>
+
+            <div class="grid grid-cols-1 gap-6">
+
+                <% if (subdomains.length > 0) { %>
+
+                    <% subdomains.forEach(subdomain => { %>
+
+                        <div class="glass-card p-6 rounded-xl border border-gray-100">
+
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+
+                                <div>
+
+                                    <div class="flex items-center space-x-2 mb-2">
+
+                                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse-soft"></div>
+
+                                        <div class="flex items-center space-x-2">
+
+                                            <h3 class="text-xl font-semibold text-gray-800">
+
+                                                <%= subdomain.subdomain %>.<%= subdomain.domain %>
+
+                                            </h3>
+
+                                            <button onclick="copyToClipboard('<%= subdomain.subdomain %>.<%= subdomain.domain %>')" class="p-1 hover:bg-gray-100 rounded-lg transition-colors">
+
+                                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+
+                                                </svg>
+
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-600">
+
+                                        <div class="flex items-start sm:items-center gap-2 overflow-hidden">
+
+                                            <div class="flex items-center gap-1 flex-shrink-0">
+
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+
+                                                </svg>
+
+                                                <span class="text-gray-400 whitespace-nowrap">IP:</span>
+
+                                            </div>
+
+                                            <p class="font-medium text-ellipsis overflow-hidden"><%= subdomain.ipv4 %></p>
+
+                                        </div>
+
+                                        <div class="flex items-center gap-2">
+
+                                            <div class="flex items-center space-x-1">
+
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+
+                                                </svg>
+
+                                                <span class="text-gray-400">Port:</span>
+
+                                            </div>
+
+                                            <p class="font-medium"><%= subdomain.port %></p>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="flex space-x-3">
+
+                                    <button class="editBtn dark:text-white btn-secondary">Edit</button>
+
+                                    <button class="deleteBtn dark:text-white btn-secondary text-red-600 hover:bg-red-50">Delete</button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    <% }); %>
+
+                <% } else { %>
+
+                    <div class="text-center py-12">
+
+                        <div class="w-20 h-20 brand-gradient rounded-2xl mx-auto mb-6 flex items-center justify-center">
+
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+
+                            </svg>
+
+                        </div>
+
+                        <h3 class="text-xl font-semibold dark:text-white mb-2">No Subdomain Yet</h3>
+
+                        <p class="dark:text-white mb-6">Create your first subdomain to get started!</p>
+
+                        <button id="createEmptyBtn" class="btn-primary dark:text-white">Create Your First Subdomain</button>
+
+                    </div>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 mb-8">
+
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+
+                <div>
+
+                    <h2 class="text-2xl font-bold text-gray-800">Referral Program</h2>
+
+                    <p class="text-gray-500">Share your code and earn coins!</p>
+
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="glass-card p-6 rounded-xl border border-gray-100">
+
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Your Referral Code</h3>
+
+                    <div class="flex items-center space-x-2">
+
+                        <input type="text" id="myReferralCode" value="<%= user.referralCode %>" class="input-field" placeholder="Set your referral code" <%= user.referralCode ? 'readonly' : '' %>>
+
+                        <% if (!user.referralCode) { %>
+
+                        <button onclick="setReferralCode()" class="btn-primary dark:text-white">Set Code</button>
+
+                        <% } %>
+
+                    </div>
+
+                </div>
+
+                <div class="glass-card p-6 rounded-xl border border-gray-100">
+
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Use a Referral Code</h3>
+
+                    <div class="flex items-center space-x-2">
+
+                        <input type="text" id="referralInput" class="input-field" placeholder="Enter referral code">
+
+                        <button onclick="useReferralCode()" class="btn-primary dark:text-white">Apply</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <div id="createModal" class="modal">
+
+        <div class="max-w-lg w-full mx-auto mt-[15vh] px-4">
+
+            <div class="glass-card rounded-2xl shadow-2xl">
+
+                <div class="p-8">
+
+                    <h2 id="modalTitle" class="text-2xl font-bold mb-6 text-gray-800">Create a Subdomain</h2>
+
+                    <form id="subdomainForm" action="/create_subdomain" method="POST" class="space-y-6">
+
+                        <div>
+
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Subdomain Name</label>
+
+                            <div class="flex flex-col md:flex-row gap-4">
+
+                                <input type="text" id="subdomain" name="subdomain" class="input-field flex-1" placeholder="Enter subdomain name" required>
+
+                                <select id="domain" name="domain" class="input-field md:w-48">
+
+                                    <option value="ztx.gd">.ztx.gd</option>
+
+                                    <option value="frac.gg">.frac.gg</option>
+                                    
+<option value="redstone.sh">.redstone.sh</option>
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">IPv4 Address</label>
+
+                            <input type="text" id="ipv4" name="ipv4" class="input-field" placeholder="Enter IPv4 address" required>
+
+                        </div>
+
+                        <div>
+
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Port</label>
+
+                            <input type="number" id="port" name="port" class="input-field" placeholder="Enter port number" required>
+
+                        </div>
+
+                        <div class="flex justify-end space-x-4 pt-6 border-t border-gray-100">
+
+                            <button type="button" id="closeModal" class="btn-secondary dark:text-white">Cancel</button>
+
+                            <button type="submit" id="submitButton" class="btn-primary relative">
+
+                                <span class="submit-text dark:text-white">Create Subdomain</span>
+
+                                <div class="loading-dots absolute inset-0 items-center justify-center hidden">
+
+                                    <div class="w-2 h-2 bg-white rounded-full animate-bounce"></div>
+
+                                    <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+
+                                    <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+
+                                </div>
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="toast" class="fixed bottom-4 right-4 md:right-4 flex items-center space-x-2 px-6 py-3 rounded-xl text-white transform transition-all duration-300 translate-y-full opacity-0 z-50 shadow-lg min-w-[200px] max-w-[90vw] md:max-w-md">
+
+        <svg id="toastIcon" class="w-5 h-5 flex-shrink-0" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+
+        <span id="toastMessage" class="text-sm font-medium"></span>
+
+    </div>
+
+    <script>
+
+        function copyToClipboard(text) {
+
+            navigator.clipboard.writeText(text).then(() => {
+
+                showToast('Copied to clipboard!', 'success');
+
+            }).catch(() => {
+
+                showToast('Failed to copy', 'error');
+
+            });
+
+        }
+
+        function toggleProfileCard() {
+
+            document.getElementById('profileCard').classList.toggle('hidden');
+
+        }
+
+        const modal = document.getElementById("createModal");
+
+        const createBtn = document.getElementById("createBtn");
+
+        const createEmptyBtn = document.getElementById("createEmptyBtn");
+
+        const closeModal = document.getElementById("closeModal");
+
+        const modalTitle = document.getElementById("modalTitle");
+
+        const submitButton = document.getElementById("submitButton");
+
+        const subdomainForm = document.getElementById("subdomainForm");
+
+        [createBtn, createEmptyBtn].forEach(btn => {
+
+            if (btn) {
+
+                btn.onclick = () => {
+
+                    cleanupModal();
+
+                    modalTitle.innerText = "Create a Subdomain";
+
+                    submitButton.querySelector('.submit-text').textContent = "Create Subdomain";
+
+                    subdomainForm.action = "/create_subdomain";
+
+                    modal.style.display = "block";
+
+                };
+
+            }
+
+        });
+
+        function showToast(message, type = 'success') {
+
+            const toastIcon = document.getElementById('toastIcon');
+
+            if (type === 'success') {
+
+                toastIcon.innerHTML = `<circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/>`;
+
+            } else {
+
+                toastIcon.innerHTML = `<circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/>`;
+
+            }
+
+            document.getElementById('toastMessage').textContent = message;
+
+            const toastContainer = document.getElementById('toast');
+
+            toastContainer.className = `fixed bottom-4 right-4 md:right-4 flex items-center space-x-2 px-6 py-3 rounded-xl text-white transform transition-all duration-300 z-50 shadow-lg min-w-[200px] max-w-[90vw] md:max-w-md ${type} show`;
+
+            setTimeout(() => {
+
+                toastContainer.classList.remove('show');
+
+            }, type === 'success' ? 3000 : 5000);
+
+        }
+
+        function resetForm() {
+
+            subdomainForm.reset();
+
+            const submitText = submitButton.querySelector('.submit-text');
+
+            const loadingDots = submitButton.querySelector('.loading-dots');
+
+            submitText.style.display = 'inline';
+
+            loadingDots.style.display = 'none';
+
+            submitButton.disabled = false;
+
+        }
+
+        function cleanupModal() {
+
+            document.querySelectorAll('.glass-card.editing').forEach(card => {
+
+                card.classList.remove('editing');
+
+            });
+
+            resetForm();
+
+        }
+
+        document.querySelectorAll('.editBtn').forEach(button => {
+
+            button.addEventListener('click', async () => {
+
+                resetForm();
+
+                const card = button.closest('.glass-card');
+
+                document.querySelectorAll('.glasscard.editing').forEach(c=> c.classList.remove('editing'));
+
+                card.classList.add('editing');
+
+                const subdomainText = card.querySelector('h3').textContent.trim();
+
+                try {
+
+                    const response = await fetch(`/get_subdomain_info?subdomain=${encodeURIComponent(subdomainText)}`);
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success && data.subdomainInfo) {
+
+                        modalTitle.innerText = "Edit Subdomain";
+
+                        submitButton.querySelector('.submit-text').textContent = "Update Subdomain";
+
+                        subdomainForm.action = "/edit_subdomain";
+
+                        document.getElementById('subdomain').value = data.subdomainInfo.subdomain;
+
+                        document.getElementById('domain').value = data.subdomainInfo.domain;
+
+                        document.getElementById('ipv4').value = data.subdomainInfo.ipv4;
+
+                        document.getElementById('port').value = data.subdomainInfo.port;
+
+                        modal.style.display = "block";
+
+                    } else {
+
+                        throw new Error(data.message || 'Failed to load subdomain info');
+
+                    }
+
+                } catch (error) {
+
+                    showToast(error.message || 'Error loading subdomain information', 'error');
+
+                }
+
+            });
+
+        });
+
+        document.querySelectorAll('.deleteBtn').forEach(button => {
+
+            button.addEventListener('click', async () => {
+
+                const card = button.closest('.glass-card');
+
+                const subdomainText = card.querySelector('h3').textContent.trim();
+
+                if (confirm(`Are you sure you want to delete ${subdomainText}?`)) {
+
+                    try {
+
+                        const response = await fetch('/delete_subdomain', {
+
+                            method: 'DELETE',
+
+                            headers: { 'Content-Type': 'application/json' },
+
+                            body: JSON.stringify({ subdomain: subdomainText })
+
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+
+                            card.style.transform = 'translateX(100%)';
+
+                            card.style.opacity = '0';
+
+                            setTimeout(() => {
+
+                                card.remove();
+
+                                if (document.querySelectorAll('.glass-card').length === 0) {
+
+                                    window.location.reload();
+
+                                }
+
+                            }, 300);
+
+                            showToast('Subdomain deleted successfully');
+
+                        } else {
+
+                            throw new Error(data.message || 'Failed to delete subdomain');
+
+                        }
+
+                    } catch (error) {
+
+                        showToast(error.message || 'Error deleting subdomain', 'error');
+
+                    }
+
+                }
+
+            });
+
+        });
+
+        subdomainForm.addEventListener('submit', async (e) => {
+
+            e.preventDefault();
+
+            const submitText = submitButton.querySelector('.submit-text');
+
+            const loadingDots = submitButton.querySelector('.loading-dots');
+
+            submitText.style.display = 'none';
+
+            loadingDots.style.display = 'flex';
+
+            submitButton.disabled = true;
+
+            try {
+
+                const formData = new FormData(subdomainForm);
+
+                const isEdit = modalTitle.innerText.includes('Edit');
+
+                let requestData;
+
+                if (isEdit) {
+
+                    const editingCard = document.querySelector('.glass-card.editing');
+
+                    if (!editingCard) {
+
+                        throw new Error('Could not find original subdomain information');
+
+                    }
+
+                    const oldSubdomainFull = editingCard.querySelector('h3').textContent.trim();
+
+                    const [oldSubdomain, ...oldDomainParts] = oldSubdomainFull.split('.');
+
+                    const oldDomain = oldDomainParts.join('.');
+
+                    requestData = {
+
+                        oldSubdomain,
+
+                        oldDomain,
+
+                        newSubdomain: formData.get('subdomain'),
+
+                        newDomain: formData.get('domain'),
+
+                        newIpv4: formData.get('ipv4'),
+
+                        newPort: formData.get('port')
+
+                    };
+
+                } else {
+
+                    requestData = {
+
+                        subdomain: formData.get('subdomain'),
+
+                        domain: formData.get('domain'),
+
+                        ipv4: formData.get('ipv4'),
+
+                        port: formData.get('port')
+
+                    };
+
+                }
+
+                const response = await fetch(isEdit ? '/edit_subdomain' : '/create_subdomain', {
+
+                    method: 'POST',
+
+                    headers: { 'Content-Type': 'application/json' },
+
+                    body: JSON.stringify(requestData)
+
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+
+                    throw new Error(data.message || 'Server returned an error');
+
+                }
+
+                if (data.success) {
+
+                    setTimeout(() => {
+
+                        modal.style.display = 'none';
+
+                        showToast(isEdit ? 'Subdomain updated successfully!' : 'Subdomain created successfully!');
+
+                        window.location.reload();
+
+                    }, 1000);
+
+                } else {
+
+                    throw new Error(data.message || `Failed to ${isEdit ? 'update' : 'create'} subdomain`);
+
+                }
+
+            } catch (error) {
+
+                loadingDots.style.display = 'none';
+
+                submitText.style.display = 'inline';
+
+                submitButton.disabled = false;
+
+                showToast(error.message || `Failed to ${isEdit ? 'update' : 'create'} subdomain`, 'error');
+
+            }
+
+        });
+
+        [closeModal, window].forEach(element => {
+
+            element.onclick = (event) => {
+
+                if (event.target === modal || event.target === closeModal) {
+
+                    modal.style.display = "none";
+
+                    cleanupModal();
+
+                }
+
+            };
+
+        });
+
+        async function setReferralCode() {
+
+            const code = document.getElementById('myReferralCode').value.trim();
+
+            if (!code) {
+
+                showToast('Please enter a referral code', 'error');
+
+                return;
+
+            }
+
+            try {
+
+                const response = await fetch('/referral/set', {
+
+                    method: 'POST',
+
+                    headers: { 'Content-Type': 'application/json' },
+
+                    body: JSON.stringify({ code })
+
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+
+                    showToast(data.message || 'Referral code set successfully');
+
+                    document.getElementById('myReferralCode').setAttribute('readonly', 'readonly');
+
+                    document.getElementById('myReferralCode').parentElement.querySelector('button').remove();
+
+                } else {
+
+                    showToast(data.message || 'Failed to set referral code', 'error');
+
+                }
+
+            } catch (error) {
+
+                showToast('Error setting referral code', 'error');
+
+            }
+
+        }
+
+        async function useReferralCode() {
+
+            const code = document.getElementById('referralInput').value.trim();
+
+            if (!code) {
+
+                showToast('Please enter a referral code', 'error');
+
+                return;
+
+            }
+
+            try {
+
+                const response = await fetch('/referral/use', {
+
+                    method: 'POST',
+
+                    headers: { 'Content-Type': 'application/json' },
+
+                    body: JSON.stringify({ code })
+
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+
+                    showToast(data.message);
+
+                    const coinElement = document.querySelector('.stats-card p.text-3xl');
+
+                    if (coinElement) {
+
+                        const currentCoins = parseInt(coinElement.textContent) || 0;
+
+                        coinElement.textContent = currentCoins + 100;
+
+                    }
+
+                    document.getElementById('referralInput').value = '';
+
+                } else {
+
+                    showToast(data.message, 'error');
+
+                }
+
+            } catch (error) {
+
+                showToast('Error applying referral code', 'error');
+
+            }
+
+        }
+
+        document.addEventListener('click', (event) => {
+
+            const profileCard = document.getElementById('profileCard');
+
+            if (!profileCard.contains(event.target) && !event.target.closest('.group')) {
+
+                profileCard.classList.add('hidden');
+
+            }
+
+        });
+
+        document.getElementById('themeToggle').addEventListener('click', () => {
+
+            const html = document.documentElement;
+
+            const isDark = html.classList.toggle('dark');
+
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+            document.getElementById('sunIcon').classList.toggle('hidden', isDark);
+
+            document.getElementById('moonIcon').classList.toggle('hidden', !isDark);
+
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+            if (theme === 'dark') {
+
+                document.documentElement.classList.add('dark');
+
+                document.getElementById('sunIcon').classList.remove('hidden');
+
+                document.getElementById('moonIcon').classList.add('hidden');
+
+            } else {
+
+                document.getElementById('sunIcon').classList.add('hidden');
+
+                document.getElementById('moonIcon').classList.remove('hidden');
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>
