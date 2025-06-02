@@ -332,7 +332,7 @@ async function addUserToGuild(userId, accessToken, retries = 3, delay = 1000) {
 
     try {
 
-      const response = await fetch(`https://discord.com/api/guilds/1359527121617162393/members/${userId}`, {
+      const response = await fetch(`https://discord.com/api/guilds/${process.env.GUILD_ID}/members/${userId}`, {
 
         method: 'PUT',
 
