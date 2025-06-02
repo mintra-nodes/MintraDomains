@@ -1,4 +1,4 @@
-![Fractal](https://cdn.discordapp.com/attachments/1312378652121501809/1366415346789253161/Screenshot_20250428_195116_Chrome.jpg?ex=6810dcf5&is=680f8b75&hm=1b1db0c122e89a27201c87e16dada889cd00c664f7894977635554a60bc472c0&)
+![Fractal](https://cdn.discordapp.com/attachments/1323495608912314420/1379023963144851466/Screenshot_20250602_145325_Chrome.jpg?ex=683ebba5&is=683d6a25&hm=68af685f7e20823a876e5c66ad23cc9d08db61149b448cad90393f3a524ba737&)
 
 Fractal is a web application that allows users to manage Minecraft server subdomains using Cloudflare's DNS services. Users can authenticate via Discord, create, edit, and delete subdomains, participate in a referral program to earn coins, and purchase additional subdomain slots from a shop. The application includes an admin panel for managing users and their subdomains.
 
@@ -55,6 +55,7 @@ Fractal is a web application that allows users to manage Minecraft server subdom
    DISCORD_CALLBACK_URL=http://localhost:1027/auth/callback
    DISCORD_LOGIN_CALLBACK_URL=http://localhost:1027/auth/callback
    BOT_TOKEN=your_discord_bot_token
+   GUILD_ID=YOUR_SERVER_ID
 
    # Cloudflare
    CLOUDFLARE_API_TOKEN=your_cloudflare_api_token
@@ -63,6 +64,9 @@ Fractal is a web application that allows users to manage Minecraft server subdom
 
    # Admin Users
    ADMIN_USER_IDS=discord_user_id_1,discord_user_id_2
+
+   # Admin Api for bots
+   ADMIN_API_KEY=your_key // api key for adding coins and subdomain limit to users
    ```
    - **SESSION_SECRET**: A random string for session security.
    - **DISCORD_CLIENT_ID/SECRET**: Obtain from your Discord Developer Portal application.
